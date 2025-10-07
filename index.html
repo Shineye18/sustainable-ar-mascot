@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Sustainable Sachet AR</title>
+
+  <!-- A-Frame + AR.js -->
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+
+  <style>
+    body { margin: 0; overflow: hidden; }
+    .popup {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 8%;
+      background: rgba(0,0,0,0.85);
+      color: #fff;
+      padding: 16px 20px;
+      border-radius: 12px;
+      font-family: "Inter", sans-serif;
+      font-size: 16px;
+      z-index: 9999;
+    }
+    .popup a { color: #8cffc3; text-decoration: none; }
+  </style>
+</head>
+
+<body>
+  <!-- ====== AR Scene ====== -->
+  <a-scene embedded
+           arjs="sourceType: webcam; debugUIEnabled: false;">
+    <a-assets>
+      <!-- Replace filenames with yours -->
+      <video id="mascotVid"
+             src="mascot_alpha.webm"
+             loop autoplay muted playsinline
+             crossorigin="anonymous"></video>
+
+      <img id="land1" src="landfill1.png">
+      <img id="land2" src="landfill2.png">
+      <img id="land3" src="landfill3.png">
+    </a-assets>
+
+    <!-- Marker target -->
+    <a-marker type="pattern" url="marker.patt">
+      <a-entity id="root" position="0 0 0">
+
+        <!-- Mascot (transparent looping video) -->
+        <a-video id="mascot"
+                 src="#mascotVid"
+                 width="1.6" height="1"
+                 position="0 0.6 0"
+                 rotation="-90 0 0"
+                 material="transparent:true;">
+        </a-video>
+
+        <!-- Quote text -->
+        <a-text value="Use me — then compost me!"
+                align="center"
+                position="0 -0.05 0"
+                rotation="-90 0 0"
+                color="#fff" width="2">
+        </a-text>
+
+        <!-- Landfill layers behind -->
+        <a-plane id="pile1" src="#land1"
+                 position="0 -0.3 -0.3"
+                 rotation="-90 0 0"
+                 width="1.6" height="0.9"
+                 material="transparent:true; opacity:1"></a-plane>
+
+        <a-plane id="pile2" src="#land2"
+                 position="0 -0.3 -0.6"
+                 rotation="-90 0 0"
+                 width="1.6" height="0.9"
+                 material="transparent:true; opacity:1"></a-plane>
+
+        <a-plane id="pile3" src="#land3"
+                 position="0 -0.3 -0.9"
+                 rotation="-90 0 0"
+                 width="1.6" height="0.9"
+                 material="transparent:true; opacity:1"></a-plane>
+      </a-entity>
+    </a-marker>
+
+    <a-entity camera></a-entity>
+  </a-scene>
+
+  <script>
+    // === Force video to play after first tap (mobile autoplay rules)
+    const vid = document.querySelector('#mascotVid');
+    document.body.addEventListener('click', () => { if (vid.paused) vid.play(); }, { once:true });
+
+    // === Interactivity: tap mascot
+    const mascot = document.querySelector('#mascot');
+    mascot.addEventListener('click', () => {
+      // 1. Move mascot aside
+      mascot.setAttribute('animation__move', 'property: position; to: 0.9 0.6 0; dur: 600; easing: easeOutQuad');
+
+      // 2. Sequentially fade landfill layers
+      const delays = [400, 1200, 2000];
+      document.querySelectorAll('#pile1, #pile2, #pile3').forEach((el, idx) => {
+        el.setAttribute('animation__fade', `property: material.opacity; to: 0; dur: 800; delay: ${delays[idx]}`);
+      });
+
+      // 3. Popup link after fade
+      setTimeout(() => {
+        const popup = document.createElement('div');
+        popup.className = 'popup';
+        popup.innerHTML = `See your carbon footprint — <a href="https://yourwebsite.com" target="_blank">Check now</a>`;
+        document.body.appendChild(popup);
+      }, 2800);
+    });
+  </script>
+</body>
+</html>
