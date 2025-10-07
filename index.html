@@ -10,7 +10,7 @@
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
 
   <style>
-    body { margin: 0; overflow: hidden; }
+    body { margin: 10; overflow: hidden; }
     .popup {
       position: fixed;
       left: 50%;
@@ -35,17 +35,17 @@
     <a-assets>
       <!-- Replace filenames with yours -->
       <video id="mascotVid"
-             src="mascot_alpha.webm"
+             src="mascot video.mp4"
              loop autoplay muted playsinline
              crossorigin="anonymous"></video>
 
-      <img id="land1" src="landfill1.png">
-      <img id="land2" src="landfill2.png">
-      <img id="land3" src="landfill3.png">
+      <img id="land1" src="landfill 03.png">
+      <img id="land2" src="landfill 02.png">
+      <img id="land3" src="landfill 01.png">
     </a-assets>
 
     <!-- Marker target -->
-    <a-marker type="pattern" url="marker.patt">
+    <a-marker type="pattern" url="sustainable marker.patt">
       <a-entity id="root" position="0 0 0">
 
         <!-- Mascot (transparent looping video) -->
@@ -58,7 +58,7 @@
         </a-video>
 
         <!-- Quote text -->
-        <a-text value="Use me — then compost me!"
+        <a-text value="Use me, then compost me! /break Click for a clean environment"
                 align="center"
                 position="0 -0.05 0"
                 rotation="-90 0 0"
@@ -110,7 +110,7 @@
       setTimeout(() => {
         const popup = document.createElement('div');
         popup.className = 'popup';
-        popup.innerHTML = `See your carbon footprint — <a href="https://yourwebsite.com" target="_blank">Check now</a>`;
+        popup.innerHTML = `Check your carbon footprint — <a href="https://www.iitk.ac.in/ckc/carbon-calculator/" target="_blank">Check now</a>`;
         document.body.appendChild(popup);
       }, 2800);
     });
